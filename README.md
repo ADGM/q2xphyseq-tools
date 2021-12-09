@@ -1,2 +1,2 @@
-# phyloseq-tools
-Manipulating phyloseq objects for microbiome analysis
+# q2xphyseq-tools
+Interface for manipulating qiime2 outputs in R through phyloseq
