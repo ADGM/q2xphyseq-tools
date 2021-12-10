@@ -3,13 +3,14 @@ physeq_cleanSilvaTax=function(physeq, append_prefix=TRUE) {
 tax.tbl=as.data.frame(as(tax_table(physeq),"matrix"))
 tax.tbl$ASV=rownames(tax.tbl)
 
-#remove duplicate genus names
+#concatenate Genus-Species assignments
 for (i in seq_along(rownames(tax.tbl))) {
 
   if (is.na(tax.tbl$Species[i])) {
   tax.tbl$Genussp[i]=paste0(tax.tbl$Genus[i])
   } else {
     tax.tbl$Genussp[i]=paste0(tax.tbl$Genus[i]," ",tax.tbl$Species[i])
+    #remove duplicate genus names
     tax.tbl$Genussp[i]=paste0(glue_collapse(intersect(unlist(str_split(tax.tbl$Genussp[i]," ")),unlist(str_split(tax.tbl$Genus[i]," "))),sep=" ")," ",glue_collapse(setdiff(unlist(str_split(tax.tbl$Species[i]," ")),unlist(str_split(tax.tbl$Genus[i]," "))),sep=" "))
 
   }
