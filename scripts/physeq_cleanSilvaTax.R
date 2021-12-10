@@ -1,4 +1,4 @@
-physeq_cleanSilvaTax=function(physeq) {
+physeq_cleanSilvaTax=function(physeq, append_prefix=TRUE) {
 
 tax.tbl=as.data.frame(as(tax_table(physeq),"matrix"))
 tax.tbl$ASV=rownames(tax.tbl)
@@ -62,9 +62,18 @@ tax.tbl$Genussp=gsub("Eubacterium coprostanoligenes human gut metagenome","Eubac
 tax.tbl$Genussp=gsub("Actinomyces Chlamydia trachomatis","Chlamydia trachomatis",tax.tbl$Genussp)
 tax.tbl$Genussp=gsub("Cutibacterium Propionibacterium sp.","Cutibacterium sp.",tax.tbl$Genussp)
 
-tax.tbl$Genussp=if_else(duplicated(tax.tbl$Genussp),paste0(tax.tbl$Genussp,".ASV",stri_sub(tax.tbl$ASV,-4,-1)),tax.tbl$Genussp) 
+if (append_prefix==TRUE) {
 #tax.tbl$Genussp=make.unique(tax.tbl$Genussp)
+#tax.tbl$Genussp=if_else(duplicated(tax.tbl$Genussp),paste0(tax.tbl$Genussp,".ASV",stri_sub(tax.tbl$ASV,-4,-1)),tax.tbl$Genussp) 
+tax.tbl$Genussp=paste0(tax.tbl$Genussp,".ASV",stri_sub(tax.tbl$ASV,-4,-1))
 
+}
+
+else if (append_prefix==FALSE) {
+  
+}
+
+#re-order tables
 tax.tbl$Lowest_taxon=tax.tbl$Genussp
 tax.tbl=tax.tbl[,c("Kingdom","Phylum","Class","Order","Family","Genus","Species","ASV","Lowest_taxon")]
 
