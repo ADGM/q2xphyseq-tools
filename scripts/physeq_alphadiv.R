@@ -3,7 +3,8 @@ physeq_alphadiv=function(physeq,group) {
 ps.rarefied = rarefy_even_depth(physeq, rngseed=1, sample.size=min(sample_sums(physeq)), replace=F)
 #factor variables before declaring new variable for collating alphadiv vals
 
-print_sd=paste0("Rarefied at ",min(sample_sums(physeq)," depth"))
+sd=min(sample_sums(physeq)
+print_sd=paste0("Rarefied at "sd," depth"))
 
 print(print_sd)
 
