@@ -13,6 +13,19 @@ res = res[order(res$padj, na.last=NA), ]
 
 #keep only significant hits in a df
 sigtab = res[(res$padj < alpha), ]
+
+if (nrow(sigtab)==0) {
+
+  print("No significant hits. Return DESeq2 results table without annotation.")
+
+sigtab=as.data.frame(sigtab)
+
+print(datatable(sigtab, caption="DESeq2 results"))
+
+}
+
+else if (nrow(sigtab)>0) {
+
 sigtab$value=rownames(sigtab)
 
 #retrieve normalized counts fr deseq
@@ -73,13 +86,18 @@ if (all.equal(sigtabxannot.melt$value,Meanct$value)) {
   }
 }  
 
+#if there is need to scale norm counts
+#sigtabxannot.melt$mean.normcount=sigtabxannot.melt$mean.normcount/2
+
 #factor prevalence group to have grp1 first before grp0
 sigtabxannot.melt$Prevalence_grp=factor(sigtabxannot.melt$Prevalence_grp,levels=c("grp1","grp0"))
 
-sigtabxannot.melt
 
+sigtabxannot.melt.reord=sigtabxannot.melt[,c((7:ncol(sigtabxannot.melt)),(1:6))]
 
-#if there is need to scale norm counts
-#sigtabxannot.melt$mean.normcount=sigtabxannot.melt$mean.normcount/2
+print(datatable(sigtabxannot.melt.reord,caption="DESeq results with per-group taxon stats"))
+sigtabxannot.melt.reord
+
+}
 
 }
