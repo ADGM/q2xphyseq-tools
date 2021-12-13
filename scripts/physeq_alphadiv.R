@@ -4,7 +4,9 @@ ps.rarefied = rarefy_even_depth(physeq, rngseed=1, sample.size=min(sample_sums(p
 #factor variables before declaring new variable for collating alphadiv vals
 
 print_sd=paste0("Rarefied at ",min(sample_sums(physeq)," depth")
-print(print_sd)
+
+#print(print_sd)
+print_sd
 
 alpha.vals=estimate_richness(ps.rarefied, measures=c("Observed","Chao1","Shannon","Fisher","Simpson","InvSimpson"))
 rownames(alpha.vals)=gsub("X","",rownames(alpha.vals))
