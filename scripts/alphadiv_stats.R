@@ -8,8 +8,5 @@ stats=df %>%
   rstatix::adjust_pvalue(method = "fdr") %>%
   rstatix::add_xy_position(x=group)
 
-  # Add 10% spaces between the p-value labels and the plot border
-plot + stat_pvalue_manual(stats,size = 2.5,label = paste0("        p = ","{p.adj}"),remove.bracket = TRUE,y.position=0.5)
-
 datatable(stats,caption="Wilcoxon test by ",group)
 }
