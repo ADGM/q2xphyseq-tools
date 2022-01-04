@@ -8,5 +8,4 @@ stats=df %>%
   rstatix::adjust_pvalue(method = "fdr") %>%
   rstatix::add_xy_position(x=group)
 
-datatable(stats,caption="Wilcoxon test by ",group)
 }
