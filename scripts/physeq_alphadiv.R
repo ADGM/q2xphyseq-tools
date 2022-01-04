@@ -17,7 +17,7 @@ rows.physeq=gsub("-",".",rownames(as(sample_data(ps.rarefied),"matrix")))
 
 if (all.equal(rows.alpha,rows.physeq)) {
   alpha.vals=cbind(sample_data(ps.rarefied),alpha.vals)
-  alpha.vals=pivot_longer(alpha.vals,cols=((ncol(sample_data(ps.rarefied))+1):ncol(alpha.vals)),names_to="alphadiv_metric",values_to="value")
+  alpha.vals=tidyr::pivot_longer(alpha.vals,cols=((ncol(sample_data(ps.rarefied))+1):ncol(alpha.vals)),names_to="alphadiv_metric",values_to="value")
 }
 
 }
