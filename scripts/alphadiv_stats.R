@@ -1,4 +1,4 @@
-alphavals_stats=function(alpha.vals,group) {
+alphadiv_stats=function(alpha.vals,group) {
 
 f=as.formula(paste0("value ~ ",group))
 
