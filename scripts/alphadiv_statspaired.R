@@ -1,4 +1,4 @@
-alphadiv_stats=function(df,group) {
+alphadiv_statspaired=function(df,group) {
 
 f=as.formula(paste0("value ~ ",group))
 
