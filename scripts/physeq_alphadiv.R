@@ -1,4 +1,4 @@
-physeq_alphadiv=function(physeq,group) {
+physeq_alphadiv=function(physeq) {
 
 ps.rarefied = rarefy_even_depth(physeq, rngseed=1, sample.size=min(sample_sums(physeq)), replace=F)
 #factor variables before declaring new variable for collating alphadiv vals
