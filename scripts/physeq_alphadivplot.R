@@ -1,14 +1,10 @@
-physeq_alphadivplot=function(physeq,group) {
+physeq_alphadivplot=function(physeq,group,jitter) {
 
-stats=alpha.vals %>%
-  group_by(alphadiv_metric) %>%
-  rstatix::wilcox_test(value ~ group) %>%
-  rstatix::adjust_pvalue(method = "fdr")
+group=sym(group)
+value=sym(value)
+jitter=sym(jitter)
 
-p=ggplot(subset(alpha.vals, !is.na(`group`)),aes_string(x=`group`,y=value,color=`group`)) + facet_wrap(. ~ alphadiv_metric, scales="free_y") + 
-  #geom_violin(alpha=0.65,width=.85) + 
-  geom_boxplot(width=0.15) + geom_jitter(size=0.8) + scale_x_discrete(guide = guide_axis(angle = 90)) + ggtitle("Alpha-diversity by `group`") + scale_color_viridis_d(direction = -1,option="C",begin=0.5,end=0.9)
-
-print(datatable(stats,caption="Wilcoxon test by `group`"))
+p=ggplot(alpha.vals,aes(x=!!group,y=!!value,color=!!group)) + facet_wrap(. ~ alphadiv_metric, scales="free_y") + geom_boxplot(width=0.3,alpha=0.5,outlier.alpha=0) +
+geom_jitter(size=1,alpha=.8,aes(color=!!jitter)) + scale_x_discrete(guide = guide_axis(angle = 90)) + ggtitle(paste0("Alpha-diversity, by ",group)) + scale_color_viridis_d(option="H",begin=0.1,end=0.9) 
 
 }
