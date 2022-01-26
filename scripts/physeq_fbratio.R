@@ -1,5 +1,6 @@
-physeq_fbratio=function(physeq,)
-physeq=readRDS("physeq_838_mtd2109xx.rds")
+physeq_fbratio=function(physeq) {
+
+#physeq=readRDS("physeq_838_mtd2109xx.rds")
 #physeq=subset_samples(physeq,Study=="LN-838"|Study=="LN-MIO")
 #physeq=subset_samples(physeq,!is.na(Pathological_response_bin))
 #physeq=subset_samples(physeq, Therapy_cycle_n_timepoint_n=="0")
@@ -34,3 +35,5 @@ mtd$scaled.fb.ratio=scale(mtd$fb.ratio,center=TRUE,scale=TRUE)
 #ggplot(mtd.filt,aes(Pathological_response_bin,fb.ratio,color=Pathological_response_bin)) + geom_jitter() + geom_boxplot(alpha=0.5,width=0.15,outlier.alpha=0) + stat_compare_means() + ggtitle("F/B ratio at baseline, by pathological response") + ylab("Firmicutes/Bacteroidetes ratio")
 
 #datatable(mtd[,c("Subject_number","Therapy_cycle_n_timepoint_n","fb.ratio","scaled.fb.ratio","Pathological_response_bin")],caption="List of samples and corresponding FB ratio")
+
+}
