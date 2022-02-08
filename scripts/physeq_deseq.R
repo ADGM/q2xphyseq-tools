@@ -2,13 +2,11 @@ physeq_deseq=function(physeq,formula,ref.var,ref.grp,comp.grp) {
     
 #physeq=readRDS("physeq_838_mtd2109xx.rds")
 
-#subset samples
-physeq=subset_samples(physeq, Pathological_response_bin!="NA")
 
-design.formula=("~ Timepoint_bin + Pathological_response_bin + Seq_batch")
-ref.var="Timepoint_bin"
-ref.grp="Baseline"
-comp.grp="Timepoint"
+#design.formula=("~ Timepoint_bin + Pathological_response_bin + Seq_batch")
+#ref.var="Timepoint_bin"
+#ref.grp="Baseline"
+#comp.grp="Timepoint"
 
 #spls are cols for counts table for deseq
 cts=as(otu_table(physeq),"matrix")
@@ -20,7 +18,7 @@ if (all.equal(colnames(cts),rownames(mtd))) {
 
 dds = DESeqDataSetFromMatrix(countData = cts,
                               colData = mtd,
-                              design = ~ Pathological_response_bin + Timepoint_bin + Seq_batch)
+                              design = paste0(formula))
 
 }
 
@@ -220,7 +218,7 @@ dds = DESeq(dds, test="Wald", fitType="local", sfType="poscounts")
 #if (all.equal(sigtabxannot.melt$value,Meanct$value)) {
 #  if (all.equal(sigtabxannot.melt$Prevalence_grp,Meanct$Prevalence_grp)) {
 #  sigtabxannot.melt=cbind(sigtabxannot.melt,Mean_normcount=Meanct$Mean_normcount)
-  }
+#  }
 #}  
 
 #factor prevalence group to have grp1 first before grp0

@@ -20,3 +20,5 @@ f=as.formula(paste0("cbind(Axis.1,Axis.2)~",group))
 centroidsR=aggregate(f,vctrs,mean)
 names(centroidsR)=c(group,"Axis.1.centroid","Axis.2.centroid")
 vctrs=left_join(vctrs,centroidsR,group)
+
+}

@@ -1,5 +1,4 @@
-deseq_annotRes=function(dds,var,alpha,tax) {
-  
+deseq_annotRes_lfcshrink=function(dds,var,alpha,tax,lfc,coef) {
 
 contrast=resultsNames(dds)[2]
 
@@ -25,17 +24,21 @@ print(datatable(sigtab, caption="DESeq2 results"))
 
 }
 
-else if (nrow(sigtab)==1) {
+else if (nrow(sigtab)>0) {
 
-  sigtab=as.data.frame(sigtab)
+res2 = lfcShrink(dds, coef=coef, type=lfc, svalue=TRUE)
+res2=as.data.frame(res2)
+res2$value=rownames(res2)
+res2=res2[rownames(sigtab),]
 
-print(datatable(sigtab, caption="DESeq2 results"))
-
+if (all.equal(rownames(sigtab),rownames(res2))) {
+ sigtab$log2FoldChange=res2$log2FoldChange
+ sigtab$lfcSE=res2$lfcSE
+ sigtab$svalue=res2$svalue
 }
 
-else if (nrow(sigtab)>1) {
-
 sigtab$value=rownames(sigtab)
+
 sigtabdf=as_tibble(sigtab)
 sigtabxannot=left_join(sigtabdf,tax)
 

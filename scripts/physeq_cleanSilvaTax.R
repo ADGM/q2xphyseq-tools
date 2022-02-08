@@ -1,3 +1,7 @@
+library(glue)
+library(stringi)
+library(varhandle)
+
 physeq_cleanSilvaTax=function(physeq, append_prefix=TRUE) {
 
 tax.tbl=as.data.frame(as(tax_table(physeq),"matrix"))
@@ -17,43 +21,53 @@ for (i in seq_along(rownames(tax.tbl))) {
 
 }
 
+for (i in 1:ncol(tax.tbl)) {
+    
+    tax.tbl[,i]=unfactor(as.data.frame(tax.tbl[,i]))
+    
+}
+
+tax.tbl$Genussp[which(is.na(tax.tbl$Genussp))]="NA"
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NA")]="NAN"
+
 #fill Genus-level NAs with next higher tax (Family)
-tax.tbl$Genussp[is.na(tax.tbl$Genus)&is.na(tax.tbl$Species)]=unfactor(tax.tbl$Family[is.na(tax.tbl$Genus)&is.na(tax.tbl$Species)])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Family[which(tax.tbl$Genussp=="NAN")]
+#tax.tbl$Genussp[tax.tbl$Genussp=="NA"]=tax.tbl$Family[tax.tbl$Genussp=="NA"]	
 
 #fill Genus-level ambigs with next higher tax (Family)
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured")]=unfactor(tax.tbl$Family[which(tax.tbl$Genussp=="uncultured")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured bacterium")]=unfactor(tax.tbl$Family[which(tax.tbl$Genussp=="uncultured bacterium")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured organism")]=unfactor(tax.tbl$Family[which(tax.tbl$Genussp=="uncultured organism")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured human gut metagenome")]=unfactor(tax.tbl$Family[which(tax.tbl$Genussp=="uncultured human gut metagenome")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured gut metagenome")]=unfactor(tax.tbl$Family[which(tax.tbl$Genussp=="uncultured gut metagenome")])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured")]=tax.tbl$Family[which(tax.tbl$Genussp=="uncultured")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured bacterium")]=tax.tbl$Family[which(tax.tbl$Genussp=="uncultured bacterium")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured organism")]=tax.tbl$Family[which(tax.tbl$Genussp=="uncultured organism")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured human gut metagenome")]=tax.tbl$Family[which(tax.tbl$Genussp=="uncultured human gut metagenome")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured gut metagenome")]=tax.tbl$Family[which(tax.tbl$Genussp=="uncultured gut metagenome")]
 
-tax.tbl$Genussp[which(tax.tbl$Genussp=="gut metagenome")]=unfactor(tax.tbl$Family[which(tax.tbl$Genussp=="gut metagenome")])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="gut metagenome")]=tax.tbl$Family[which(tax.tbl$Genussp=="gut metagenome")]
 
-tax.tbl$Genussp[which(tax.tbl$Genussp=="unidentified")]=unfactor(tax.tbl$Family[which(tax.tbl$Genussp=="unidentified")])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="unidentified")]=tax.tbl$Family[which(tax.tbl$Genussp=="unidentified")]
 
 #fill Family-level NAs with next higher tax (Order)
-tax.tbl$Genussp[is.na(tax.tbl$Genussp)]=unfactor(tax.tbl$Order[is.na(tax.tbl$Genussp)])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Order[which(tax.tbl$Genussp=="NAN")]
 
 #fill Family-level ambigs with next higher tax (Order)
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured")]=unfactor(tax.tbl$Order[which(tax.tbl$Genussp=="uncultured")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured bacterium")]=unfactor(tax.tbl$Order[which(tax.tbl$Genussp=="uncultured bacterium")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured organism")]=unfactor(tax.tbl$Order[which(tax.tbl$Genussp=="uncultured organism")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured human gut metagenome")]=unfactor(tax.tbl$Order[which(tax.tbl$Genussp=="uncultured human gut metagenome")])
-tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured gut metagenome")]=unfactor(tax.tbl$Order[which(tax.tbl$Genussp=="uncultured gut metagenome")])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured")]=tax.tbl$Order[which(tax.tbl$Genussp=="uncultured")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured bacterium")]=tax.tbl$Order[which(tax.tbl$Genussp=="uncultured bacterium")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured organism")]=tax.tbl$Order[which(tax.tbl$Genussp=="uncultured organism")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured human gut metagenome")]=tax.tbl$Order[which(tax.tbl$Genussp=="uncultured human gut metagenome")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="uncultured gut metagenome")]=tax.tbl$Order[which(tax.tbl$Genussp=="uncultured gut metagenome")]
 
-tax.tbl$Genussp[which(tax.tbl$Genussp=="gut metagenome")]=unfactor(tax.tbl$Order[which(tax.tbl$Genussp=="gut metagenome")])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="gut metagenome")]=tax.tbl$Order[which(tax.tbl$Genussp=="gut metagenome")]
 
-tax.tbl$Genussp[which(tax.tbl$Genussp=="unidentified")]=unfactor(tax.tbl$Order[which(tax.tbl$Genussp=="unidentified")])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="unidentified")]=tax.tbl$Order[which(tax.tbl$Genussp=="unidentified")]
 
 #fill out all succeeding NAs with next higher tax (Class upwards)
-tax.tbl$Genussp[is.na(tax.tbl$Genussp)]=unfactor(tax.tbl$Class[is.na(tax.tbl$Genussp)])
-tax.tbl$Genussp[is.na(tax.tbl$Genussp)]=unfactor(tax.tbl$Phylum[is.na(tax.tbl$Genussp)])
-tax.tbl$Genussp[is.na(tax.tbl$Genussp)]=unfactor(tax.tbl$Kingdom[is.na(tax.tbl$Genussp)])
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Class[which(tax.tbl$Genussp=="NAN")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Phylum[which(tax.tbl$Genussp=="NAN")]
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Kingdom[which(tax.tbl$Genussp=="NAN")]
 
 #clean names
 tax.tbl$Genussp=gsub("\\[","",tax.tbl$Genussp)
 tax.tbl$Genussp=gsub("\\]","",tax.tbl$Genussp)
-tax.tbl$Genussp=gsub(" bacterium","",tax.tbl$Genussp)
+tax.tbl$Genussp=gsub(" bacterium","",tax.tbl$Genussp)# 
 tax.tbl$Genussp=gsub(" organism","",tax.tbl$Genussp)
 tax.tbl$Genussp=gsub(" group","",tax.tbl$Genussp)
 

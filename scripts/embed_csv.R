@@ -1,4 +1,4 @@
-embed_data= function(x= mtcars, filename= "file.csv", label= "Download as CSV"){
+embed_csv=function(x= mtcars, filename= "file.csv", label= "Download as CSV") {
   
   # Create encoded Base64 datastream 
   encode_data= function(x){
