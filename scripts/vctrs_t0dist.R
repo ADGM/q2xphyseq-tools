@@ -1,3 +1,6 @@
+library(usedist)
+library(metagMisc)
+
 vctrs_t0dist=function(vctrs) {
 
 vctrs2=vctrs
