@@ -48,15 +48,6 @@ dist.allt0.df=dist2list(dist.allt0,tri=TRUE)
 #dist.allt0.df=dist.allt0.df[duplicated(dist.allt0.df$value)==FALSE,]
 dist.df=rbind(dist.df,data.frame(dist.t0tn=dist.allt0.df$value,px_cyc=dist.allt0.df$row,Patient_number=paste0(gsub("_.*","",dist.allt0.df$row),"_",gsub("_.*","",dist.allt0.df$col)),Cycle_number=rep("0",rep=nrow(dist.allt0.df)),Cycle_agg2=rep("0",nrow(dist.allt0.df))))
 
-
-dist.df$px_tn=paste0(dist.df$Patient_number,"_",vctrs2$Cycle_number)
-
-dist.df$Cycle_agg2=factor(dist.df$Cycle_agg2,levels=c("0","1-11","12-17","18-49"))
-comp=list(c("0","1-11"),c("1-11","12-17"),c("12-17","18-49"))
-comp2=list(c("0","1-11"),c("0","12-17"),c("0","18-49"))
-
-dist.df$Cycle_number=as.numeric(unfactor(dist.df$Cycle_number))
-
 dist.df
 }
 
