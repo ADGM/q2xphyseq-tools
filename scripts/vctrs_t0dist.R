@@ -57,6 +57,7 @@ comp2=list(c("0","1-11"),c("0","12-17"),c("0","18-49"))
 
 dist.df$Cycle_number=as.numeric(unfactor(dist.df$Cycle_number))
 
+dist.df
 }
 
 # ggplot(vctrs2[!is.na(vctrs2$dist.t0tn),],aes(Cycle_agg2,dist.t0tn,color=Cycle_agg2)) + geom_boxplot(outlier.alpha=0,width=0.2,alpha=0.60) + geom_jitter() + stat_compare_means(comparisons=comp) + scale_color_viridis_d(option="H",begin=0.1,end=0.9)
