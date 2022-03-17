@@ -1,13 +1,11 @@
-deseq_annotRes=function(dds,var,alpha,tax) {
+deseqres_annot=function(res,var,alpha) {
   
+list=list()
 
-contrast=resultsNames(dds)[2]
+#res = results(dds, alpha=alpha,contrast=c(ref.var,comp.grp,ref.grp))
 
 g0=levels(colData(dds)[,var])[1]
 g1=levels(colData(dds)[,var])[2]
-
-res = results(dds, alpha=alpha,name=contrast)
-#numerator #then denominator
 
 #order hits by p-adj value
 res = res[order(res$padj, na.last=NA), ]
@@ -17,11 +15,9 @@ sigtab = res[(res$padj < alpha), ]
 
 if (nrow(sigtab)==0) {
 
-  print("No significant hits. Return DESeq2 results table without annotation.")
-
 sigtab=as.data.frame(sigtab)
 
-print(datatable(sigtab, caption="DESeq2 results"))
+list$sigtab=sigtab
 
 }
 
@@ -29,7 +25,7 @@ else if (nrow(sigtab)==1) {
 
   sigtab=as.data.frame(sigtab)
 
-print(datatable(sigtab, caption="DESeq2 results"))
+list$sigtab=sigtab
 
 }
 
@@ -50,7 +46,7 @@ meannormcount=rowMeans(normalized_counts.toptax)
 sigtabxannot$mean.normcount=meannormcount
 
 #get list of CRC samples by group from phyloseq metadata
-mtd=as.data.frame(as(sample_data(physeq),"matrix"))
+mtd=sample_data(physeq)
 g1spls=rownames(mtd[mtd[[var]]==g1,])
 g0spls=rownames(mtd[mtd[[var]]==g0,])
 
@@ -106,10 +102,11 @@ if (all.equal(sigtabxannot.melt$value,Meanct$value)) {
 sigtabxannot.melt$Prevalence_grp=factor(sigtabxannot.melt$Prevalence_grp,levels=c("grp1","grp0"))
 
 
-sigtabxannot.melt.reord=sigtabxannot.melt[,c((7:ncol(sigtabxannot.melt)),(1:6))]
+list$sigtabxannot.melt.reord=sigtabxannot.melt[,c((7:ncol(sigtabxannot.melt)),(1:6))]
 
-print(datatable(sigtabxannot.melt.reord,caption="DESeq results with per-group taxon stats"))
-sigtabxannot.melt.reord
+#print(datatable(sigtabxannot.melt.reord,caption="DESeq results with per-group taxon stats"))
+
+list
 
 }
 

@@ -1,5 +1,6 @@
-physeq_alphadiv=function(physeq) {
 
+#measures=c("Observed","Chao1","Shannon","Fisher","Simpson","InvSimpson")
+physeq_alphadiv=function(physeq,measures) {
 ps.rarefied = rarefy_even_depth(physeq, rngseed=1, sample.size=min(sample_sums(physeq)), replace=F)
 #factor variables before declaring new variable for collating alphadiv vals
 
@@ -8,7 +9,7 @@ print_sd=paste0("Rarefied at ",sd," depth")
 
 print(print_sd)
 
-alpha.vals=estimate_richness(ps.rarefied, measures=c("Observed","Chao1","Shannon","Fisher","Simpson","InvSimpson"))
+alpha.vals=estimate_richness(ps.rarefied, measures=measures)
 rownames(alpha.vals)=gsub("X","",rownames(alpha.vals))
 alpha.vals=subset(alpha.vals, select = -c(se.chao1))
 

@@ -21,16 +21,18 @@ for (i in seq_along(rownames(tax.tbl))) {
 
 }
 
-for (i in 1:ncol(tax.tbl)) {
+#for (i in 1:ncol(tax.tbl)) {
     
-    tax.tbl[,i]=unfactor(as.data.frame(tax.tbl[,i]))
+#    tax.tbl[,i]=unfactor(as.data.frame(tax.tbl[,i]))
     
-}
+#}
 
 tax.tbl$Genussp[which(is.na(tax.tbl$Genussp))]="NA"
 tax.tbl$Genussp[which(tax.tbl$Genussp=="NA")]="NAN"
 
 #fill Genus-level NAs with next higher tax (Family)
+tax.tbl$Family=unfactor(tax.tbl$Family)
+
 tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Family[which(tax.tbl$Genussp=="NAN")]
 #tax.tbl$Genussp[tax.tbl$Genussp=="NA"]=tax.tbl$Family[tax.tbl$Genussp=="NA"]	
 
@@ -46,6 +48,9 @@ tax.tbl$Genussp[which(tax.tbl$Genussp=="gut metagenome")]=tax.tbl$Family[which(t
 tax.tbl$Genussp[which(tax.tbl$Genussp=="unidentified")]=tax.tbl$Family[which(tax.tbl$Genussp=="unidentified")]
 
 #fill Family-level NAs with next higher tax (Order)
+tax.tbl$Genussp[which(is.na(tax.tbl$Genussp))]="NA"
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NA")]="NAN"
+
 tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Order[which(tax.tbl$Genussp=="NAN")]
 
 #fill Family-level ambigs with next higher tax (Order)
@@ -60,8 +65,19 @@ tax.tbl$Genussp[which(tax.tbl$Genussp=="gut metagenome")]=tax.tbl$Order[which(ta
 tax.tbl$Genussp[which(tax.tbl$Genussp=="unidentified")]=tax.tbl$Order[which(tax.tbl$Genussp=="unidentified")]
 
 #fill out all succeeding NAs with next higher tax (Class upwards)
+tax.tbl$Genussp[which(is.na(tax.tbl$Genussp))]="NA"
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NA")]="NAN"
+
 tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Class[which(tax.tbl$Genussp=="NAN")]
+
+tax.tbl$Genussp[which(is.na(tax.tbl$Genussp))]="NA"
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NA")]="NAN"
+
 tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Phylum[which(tax.tbl$Genussp=="NAN")]
+
+tax.tbl$Genussp[which(is.na(tax.tbl$Genussp))]="NA"
+tax.tbl$Genussp[which(tax.tbl$Genussp=="NA")]="NAN"
+
 tax.tbl$Genussp[which(tax.tbl$Genussp=="NAN")]=tax.tbl$Kingdom[which(tax.tbl$Genussp=="NAN")]
 
 #clean names
