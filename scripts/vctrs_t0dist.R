@@ -1,34 +1,35 @@
 library(usedist)
 library(metagMisc)
 
-vctrs_t0dist=function(vctrs) {
+vctrs_t0dist=function(vctrs,px.grp,tbin.grp,t0.var,tn.var,tn.grp,trt.grp) {
 
 vctrs2=vctrs
-vctrs2$px_tn=paste0(vctrs2$Patient_number,"_",vctrs2$Cycle_agg2)
-vctrs2$px_cyc=paste0(vctrs2$Patient_number,"_",unfactor(vctrs2$Cycle_number))
 
-vctrs2$Axis.1.wtd=vctrs2$Axis.1*pcoa.euc$values$Relative_eig[1]
-vctrs2$Axis.2.wtd=vctrs2$Axis.2*pcoa.euc$values$Relative_eig[2]
+vctrs2$Subject_tn=make.unique(paste0(vctrs2$Subject_number,"_",vctrs2$Timepoint_number))
 
-vctrs2=vctrs2 %>% group_by(Patient_number)
+vctrs2$Axis.1.wtd=vctrs2$Axis.1*pcoa$values$Relative_eig[1]
+vctrs2$Axis.2.wtd=vctrs2$Axis.2*pcoa$values$Relative_eig[2]
+
+vctrs2=vctrs2 %>% group_by(Subject_number)
+
 
 coords.df=vctrs2 %>% ungroup() %>% select("Axis.1.wtd","Axis.2.wtd")
 coords.df=as.data.frame(coords.df)
-rownames(coords.df)=vctrs2$px_cyc
+rownames(coords.df)=vctrs2$Subject_tn
 
 eucdist=dist(coords.df,"euclidean")
 
-t0=which(vctrs2$Timepoint_bin=="Baseline")
+t0=which(vctrs2[,tbin.grp]==t0.var)
 
 list_t0=list()
 list_tn=list()
 
 for (i in seq_along(t0)) {
   
-  px=vctrs2$Patient_number[t0[i]]
+  px=vctrs2$Subject_number[t0[i]]
   
-  list_t0[[i]]=which(vctrs2$Patient_number %in% px & vctrs2$Timepoint_bin=="Baseline")
-  list_tn[[i]]=which(vctrs2$Patient_number %in% px & vctrs2$Timepoint_bin=="Timepoint")
+  list_t0[[i]]=which(vctrs2$Subject_number %in% px & vctrs2[,tbin.grp]=="Baseline")
+  list_tn[[i]]=which(vctrs2$Subject_number %in% px & vctrs2[,tbin.grp]=="Timepoint")
   
 }
 
@@ -36,17 +37,17 @@ dist.bypx=list()
 
 for (i in seq_along(t0)) {
   
-  dist.bypx[[i]]=dist_get(eucdist,vctrs2$px_cyc[list_t0[[i]]],vctrs2$px_cyc[list_tn[[i]]])
+  dist.bypx[[i]]=dist_get(eucdist,vctrs2$Subject_tn[list_t0[[i]]],vctrs2$Subject_tn[list_tn[[i]]])
   
 }
 
-dist.df=data.frame(dist.t0tn=reshape2::melt(dist.bypx)$value,px_cyc=vctrs2$px_cyc[reshape2::melt(list_tn)$value],Patient_number=vctrs2$Patient_number[reshape2::melt(list_tn)$value],Cycle_number=vctrs2$Cycle_number[reshape2::melt(list_tn)$value],Cycle_agg2=vctrs2$Cycle_agg2[reshape2::melt(list_tn)$value])
+dist.df=data.frame(dist.t0tn=reshape2::melt(dist.bypx)$value,Subject_tn=vctrs2$Subject_tn[reshape2::melt(list_tn)$value],Subject_number=vctrs2$Subject_number[reshape2::melt(list_tn)$value],Timepoint_number=vctrs2[reshape2::melt(list_tn)$value,tn.grp],Group=vctrs2$Group[reshape2::melt(list_tn)$value])
 
-dist.allt0=dist_subset(eucdist,vctrs2$px_cyc[reshape2::melt(list_t0)$value])
+dist.allt0=dist_subset(eucdist,vctrs2$Subject_tn[reshape2::melt(list_t0)$value])
 dist.allt0.df=dist2list(dist.allt0,tri=TRUE)
 
 #dist.allt0.df=dist.allt0.df[duplicated(dist.allt0.df$value)==FALSE,]
-dist.df=rbind(dist.df,data.frame(dist.t0tn=dist.allt0.df$value,px_cyc=dist.allt0.df$row,Patient_number=paste0(gsub("_.*","",dist.allt0.df$row),"_",gsub("_.*","",dist.allt0.df$col)),Cycle_number=rep("0",rep=nrow(dist.allt0.df)),Cycle_agg2=rep("0",nrow(dist.allt0.df))))
+dist.df=rbind(dist.df,data.frame(dist.t0tn=dist.allt0.df$value,Subject_tn=dist.allt0.df$row,Subject_number=paste0(gsub("_.*","",dist.allt0.df$row),"_",gsub("_.*","",dist.allt0.df$col)),Timepoint_number=rep("0",rep=nrow(dist.allt0.df)),Group=rep("within-t0",rep=nrow(dist.allt0.df))))
 
 dist.df
 }
